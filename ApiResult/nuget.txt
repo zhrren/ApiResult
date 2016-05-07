@@ -1,0 +1,2 @@
+﻿nuget pack ApiResult.csproj -Prop Configuration=Release
+nuget push Mark.ApiResult.2.0.0.0.nupkg
