@@ -2,79 +2,77 @@
 
 namespace Mark.ApiResult
 {
-    public class ApiResult : ApiResult<object>
+
+    public class ApiResult<TData>
     {
-        public ApiResult()
+        public int Code { get; set; }
+        public string Message { get; set; }
+        public TData Data { get; set; }
+
+        public static implicit operator ApiResult(ApiResult<TData> result)
         {
+            return new ApiResult()
+            {
+                Code = result.Code,
+                Message = result.Message,
+                Data = result.Data
+            };
         }
 
-        /// <summary>
-        /// 操作成功
-        /// </summary>
-        /// <param name="message"></param>
-        public ApiResult(string message = null) : base(message) { }
-
-        /// <summary>
-        /// 操作成功
-        /// </summary>
-        public ApiResult(object data = null, string message = "OK") : base(data, message) { }
-
-        /// <summary>
-        /// 操作失败
-        /// </summary>
-        /// <param name="typeCode">大于0且小于1000，全局唯一</param>
-        /// <param name="message"></param>
-        public ApiResult(int error, string message, object data = null)
-            : base(error, message, data)
-        { }
+        public static explicit operator ApiResult<TData>(ApiResult result)
+        {
+            return new ApiResult<TData>()
+            {
+                Code = result.Code,
+                Message = result.Message,
+                Data = (TData)result.Data
+            };
+        }
     }
 
-    /// <summary>
-    /// 用于WebAPI，动作返回的结果
-    /// 动作：
-    /// POST 适用于修改数据
-    /// GET  适用于查看数据
-    /// </summary>
-    public class ApiResult<TData> where TData : class
+    public class ApiResult: ApiResult<object>
     {
-        public ApiResult()
+        public static ApiResult Error(int errorCode, string errorMessage)
         {
+            if (errorCode == 0) throw new ArgumentException("errorCode != 0");
+
+            return new ApiResult()
+            {
+                Code = errorCode,
+                Message = errorMessage
+            };
         }
 
-        /// <summary>
-        /// 操作成功
-        /// </summary>
-        /// <param name="message"></param>
-        public ApiResult(string message = null)
+        public static ApiResult<T> Error<T>(int errorCode, string errorMessage,
+            T data = default(T))
         {
-            Message = message;
+            if (errorCode == 0) throw new ArgumentException("errorCode");
+
+            return new ApiResult<T>()
+            {
+                Code = errorCode,
+                Message = errorMessage,
+                Data = data
+            };
+        }
+        
+        public static ApiResult Success(string message = "OK")
+        {
+            return new ApiResult()
+            {
+                Code = 0,
+                Message = message
+            };
         }
 
-        /// <summary>
-        /// 操作成功
-        /// </summary>
-        public ApiResult(TData data = null, string message = "OK")
+        public static ApiResult<T> Success<T>(T data, string message = "OK")
         {
-            Message = message;
-            Data = data;
+            return new ApiResult<T>()
+            {
+                Code = 0,
+                Message = message,
+                Data = data
+            };
         }
-
-        /// <summary>
-        /// 操作失败
-        /// </summary>
-        /// <param name="typeCode">大于0且小于1000，全局唯一</param>
-        /// <param name="message"></param>
-        public ApiResult(int error, string message, TData data = null)
-        {
-            Code = error;
-            Message = message;
-            Data = data;
-        }
-
-        public int Code { get; set; }
-
-        public string Message { get; set; }
-
-        public TData Data { get; set; }
     }
 }
