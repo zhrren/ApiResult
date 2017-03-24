@@ -56,7 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ApiResult\ApiResult.csproj">
-      <Project>{94434c5c-3b86-4d9a-9685-a6c491799850}</Project>
+      <Project>{c604706d-6334-4fc8-9a7b-9607494acf6d}</Project>
       <Name>ApiResult</Name>
     </ProjectReference>
   </ItemGroup>
