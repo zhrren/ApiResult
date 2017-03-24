@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Mark.ApiResult;
 
 namespace Tests
@@ -12,13 +9,16 @@ namespace Tests
         public string Name { get; set; }
     }
 
+    [TestClass]
     public class ApiResultTest
     {
-        [Fact]
+        [TestMethod]
         public void ConvertTest()
         {
-            ApiResult result = new ApiResult<Model>();
+            ApiResult result = ApiResult.Success<Model>(new Model() { Name = "Book" }, "200");
             ApiResult<Model> modelResult = (ApiResult<Model>)result;
+
+            Assert.AreEqual("Book", modelResult.Data.Name);
         }
     }
 }

@@ -56,12 +56,12 @@ namespace Mark.ApiResult
             };
         }
         
-        public static ApiResult Success(string message = "OK")
+        public static ApiResult Success()
         {
             return new ApiResult()
             {
                 Code = 0,
-                Message = message
+                Message = "OK"
             };
         }
 
